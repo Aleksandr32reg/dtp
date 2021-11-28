@@ -1,0 +1,11 @@
+spring:
+  liquibase:
+    change-log: "classpath:db-migrations/changelog.xml"
+    password: webwelle32
+    user: postgres
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres?currentSchema=car_driver"
+    username: postgres
+    password: webwelle32
+server:
+  port: 4210
