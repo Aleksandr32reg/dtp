@@ -4,7 +4,7 @@ spring:
     password: webwelle32
     user: postgres
   datasource:
-    url: "jdbc:postgresql://localhost:5432/postgres?currentSchema=car_driver"
+    url: "jdbc:postgresql://localhost:5432/postgres?currentSchema=dtp"
     username: postgres
     password: webwelle32
 server:

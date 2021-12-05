@@ -1,6 +1,6 @@
 package com.example.dtp.enums;
 
-public enum punishmentClass {
+public enum PunishmentClass {
     WAITING,
     INNOCENT,
     PENALTY,

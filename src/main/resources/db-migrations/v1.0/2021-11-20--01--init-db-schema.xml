@@ -20,6 +20,9 @@
             <column name="district" type="VARCHAR(200)">
                 <constraints nullable="false"/>
             </column>
+            <column name="street" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
             <column name="location" type="VARCHAR(200)">
                 <constraints nullable="false"/>
             </column>

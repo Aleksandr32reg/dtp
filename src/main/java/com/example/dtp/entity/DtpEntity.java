@@ -1,11 +1,10 @@
 package com.example.dtp.entity;
 
-import com.example.dtp.enums.punishmentClass;
+import com.example.dtp.enums.PunishmentClass;
 import lombok.*;
 
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Getter
@@ -23,7 +22,7 @@ public class DtpEntity extends BaseEntity {
         private String location;
         private LocalDateTime timeOfDtp;
         private Boolean active;
-        private punishmentClass punishment;
+        private PunishmentClass punishment;
         private Double penalty;
         private Double period;
 
