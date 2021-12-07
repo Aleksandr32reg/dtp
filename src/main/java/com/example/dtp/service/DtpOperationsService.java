@@ -1,6 +1,7 @@
 package com.example.dtp.service;
 
 import com.example.dtp.Repository.DtpRepository;
+import com.example.dtp.Repository.LocationRepository;
 import com.example.dtp.dto.DtpDto;
 import com.example.dtp.dto.LocationDto;
 import com.example.dtp.entity.DtpEntity;
@@ -37,6 +38,7 @@ public class DtpOperationsService {
         return repository.save(mapper.toDtpEntity(dto));
     }
 
+    //где маппер?
     public DtpEntity updateDtp(UUID id, DtpDto dto) {
         DtpEntity dtp = getDtpEntityById(id);
         dtp.setDriverLicense(dto.getDriverLicense());
@@ -84,7 +86,8 @@ public class DtpOperationsService {
 
     public List<DtpDto> getDtpByLocation(LocationDto locationDto) {
 
-        List<DtpEntity> dtpEntities = repository.findAll();
+        List<DtpEntity> dtpEntities = repository.findAll(); // не покатит, процессить в рантайме столько данных - у вас никакого железа не хватит
+        // сделайте оптимальный запрос в базу
         List<DtpEntity> dtpFiltered = null;
 
         var region = locationDto.getRegion();
@@ -93,6 +96,7 @@ public class DtpOperationsService {
         var street = locationDto.getStreet();
         var location = locationDto.getLocation();
 
+        // switch?
         if (!region.isBlank()) {
             dtpFiltered = dtpEntities.stream().filter(DtpEntity -> DtpEntity.getRegion().equals(region)).collect(Collectors.toList());
         } else if (!town.isBlank()) {
@@ -111,17 +115,14 @@ public class DtpOperationsService {
     public List<DtpDto> getDtpByPeriod(LocalDate from, LocalDate to, List<DtpDto> dtpDtoList){
         Timestamp dateFrom = Timestamp.valueOf(from.atTime(LocalTime.MIN));
         Timestamp dateTo = Timestamp.valueOf(to.atTime(LocalTime.MAX));
-
-        List<DtpDto> dtpFiltered = null;
-        dtpFiltered = dtpDtoList.stream().filter(DtpDto -> DtpDto.getTimeOfDtp().isAfter(dateFrom.toLocalDateTime())).
+        //зачем было разбивать
+        return dtpDtoList.stream().filter(DtpDto -> DtpDto.getTimeOfDtp().isAfter(dateFrom.toLocalDateTime())).
                 filter(DtpDto -> DtpDto.getTimeOfDtp().isBefore(dateTo.toLocalDateTime())).collect(Collectors.toList());
-
-        return dtpFiltered;
     }
 
     public double getMidCountDtoByMonth(int year, List<DtpDto> ListDtpDto) {
         Calendar calendarFrom = Calendar.getInstance();
-        calendarFrom.set(year, 1, 1, 0, 0, 0);
+        calendarFrom.set(year, 1, 1, 0, 0, 0); // что за легаси? календарь древнющая либа, не понимаю зачем оно тут вообще используйте LocalDateTime
         Calendar calendarTo = Calendar.getInstance();
         calendarTo.set(year, 12, 31, 23, 59, 59);
         LocalDate localDateFrom = LocalDateTime.ofInstant(calendarFrom.toInstant(), calendarFrom.getTimeZone().toZoneId()).toLocalDate();
@@ -131,8 +132,9 @@ public class DtpOperationsService {
         return (double) ListFiltered.size() / 12;
     }
 
-    public String getPunishmentStatistics(List<DtpDto> ListDtpDto) {
-        Integer punishmentStatistics[] = new Integer[]{0, 0, 0, 0}; // ???
+    public String getPunishmentStatistics(List<DtpDto> ListDtpDto) { // названия переменных с маленбокй буквы
+        Integer[] punishmentStatistics = new Integer[]{0, 0, 0, 0}; // ???
+        // все это делать на уровне СУБД можно SELECT COUNT()...
         for (DtpDto dtpDto : ListDtpDto) {
             if (dtpDto.getPunishment().equals(PunishmentClass.INNOCENT))
                 punishmentStatistics[0]++;
@@ -151,6 +153,8 @@ public class DtpOperationsService {
         Optional<DtpEntity> optionalDtp = repository.findById(id);
         if (optionalDtp.isEmpty()) {
             log.error("getDtpById.out - dtp with ID {} not found", id);
+            // а где выброс исключения то? после написания лога все равно выполнится ретурн и упадет НПЕ
+            // здесь считайте тупо логирование ошибки, нет обработки бизнес события "обьект не найден"
         }
         return optionalDtp.get();
     }

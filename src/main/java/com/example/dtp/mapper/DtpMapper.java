@@ -9,6 +9,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
+
+//уверены что SET_TO_NULL это лучшая стратегия?
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
 public interface DtpMapper {
 

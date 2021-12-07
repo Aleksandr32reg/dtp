@@ -19,8 +19,10 @@ public class DriverConnector {
     private String driverServiceHost;
 
     @Value("${external.driver-service.port}")
-    private String driverServicePort;
+    private String driverServicePort; // где эти переменные в енвах? правильно ли я понял что вы так и не запускали ни разу ваше приложение?)))
 
+
+    //почему метод не испольузется?
     public DriverDto getDriverLicense(String license) {
         var uri = UriComponentsBuilder.fromUriString(driverServiceHost)
                 .port(driverServicePort)
